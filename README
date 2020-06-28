@@ -1,0 +1,38 @@
+lxd-openwrt-simplified
+===========
+
+Scripts for building LXD/LXC images from OpenWrt rootfs tarballs. 
+
+This is a simplified version of https://github.com/mikma/lxd-openwrt.
+
+This version assumes the user has already got a rootfs tarball containing ALL essential packages, e.g. by buildroot or by image builder.
+
+What it will do:
+
+1. unpack the tarball provided by the user.
+
+2. build metadata and inject container-specific files/settings.
+
+3. repack the tarball according to lxc/lxd requirements. 
+
+Requirements
+------------
+
+It's recommended you use Debian or Ubuntu on the build system. 
+
+Configuration
+-------------
+
+Refer to the top of build_cust.sh.
+
+Usage
+-----
+
+./build_cust.sh [[rootfs tarball] [lxd|plain]
+
+Example
+-------
+
+./build_cust.sh openwrt-snapshot-r13592-x86-64-generic-rootfs.tar.gz plain
+
+You may also interested in my wrapper scripts for running OpenWRT as lxc containers in Proxmox VE: https://github.com/DazzyWalkman/oplxc4pve

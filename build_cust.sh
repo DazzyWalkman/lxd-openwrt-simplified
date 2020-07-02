@@ -12,7 +12,7 @@ tarball=bin/${dist}-${ver}-${revision}-${arch}-${subarch}-${type}.tar.gz
 metadata=bin/metadata.yaml
 rootfs="$1"
 usage() {
-	echo "Usage: $0 [rootfs tarball] [lxd|plain] "
+	echo "Usage: $0 <rootfs tarball> <lxd|plain> "
 	exit 1
 }
 if [ "$type" != plain ] && [ "$type" != lxd ] ; then

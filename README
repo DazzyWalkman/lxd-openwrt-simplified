@@ -28,7 +28,7 @@ Refer to the top of build_cust.sh.
 Usage
 -----
 
-./build_cust.sh [[rootfs tarball] [lxd|plain]
+./build_cust.sh <rootfs tarball> <lxd|plain>
 
 Example
 -------

@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+export LC_ALL=C
 ver=$(basename "$1"|cut -d'-' -f 2)
 dist=$(basename "$1"|cut -d'-' -f 1)
 type=$2
@@ -11,10 +12,13 @@ if [ "$type" != plain ] && [ "$type" != lxd ] ; then
 usage
 exit 1
 fi
-export LC_ALL=C
 revision=$(basename "$1"|cut -d'-' -f 3-4)
 rootfs="$1"
 arch_lxd="$(tar xf "$rootfs" ./etc/openwrt_release -O|grep DISTRIB_ARCH|sed -e "s/.*='\(.*\)'/\1/")"
+if [ ! "$arch_lxd" ]; then
+echo "Unknown CPU arch. Possible an invalid OpenWRT rootfs tarball. Failed."
+exit 1
+fi 
 tarball=bin/${dist}-${ver}-${revision}-${arch_lxd}-${type}.tar.gz
 metadata=bin/metadata.yaml
 build_tarball() {

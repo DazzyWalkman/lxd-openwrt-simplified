@@ -84,6 +84,9 @@ disable_services() {
         env IPKG_INSTROOT=$instroot sh $instroot/etc/rc.common $instroot/etc/init.d/"$service" disable
     done
 }
+clean_up() {
+	rm -rf "$dir"
+}
 unpack
 disable_root
 if test -n "$metadata"; then
@@ -96,3 +99,4 @@ if test -n "$files"; then
 	add_files "$files" $instroot
 fi
 pack
+clean_up

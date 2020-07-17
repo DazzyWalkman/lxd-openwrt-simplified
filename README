@@ -35,4 +35,4 @@ Example
 
 ./build_cust.sh openwrt-snapshot-r13592-x86-64-generic-rootfs.tar.gz plain
 
-You may also interested in my wrapper scripts for running OpenWRT as lxc containers in Proxmox VE: https://github.com/DazzyWalkman/oplxc4pve
+You may be also interested in my wrapper scripts for running OpenWRT as lxc containers in Proxmox VE: https://github.com/DazzyWalkman/oplxc4pve

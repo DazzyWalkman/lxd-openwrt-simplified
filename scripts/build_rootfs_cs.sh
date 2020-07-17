@@ -33,12 +33,16 @@ if [ $# -ne 1 ]; then
 	usage
 fi
 src_tar=$1
-dir=/tmp/build.$$
+dir=$(mktemp -d)
+if [ $? -eq 1 ]; then 
+	echo "Failed to make temp dir. Abort."
+	exit 1
+fi
 files_dir=files/
-instroot=$dir/rootfs
+instroot="$dir"/rootfs
 unpack() {
-	mkdir -p $instroot
-	 (cd $instroot && tar -xz) < "$src_tar"
+	mkdir -p "$instroot"
+	 (cd "$instroot" && tar -xz) < "$src_tar"
 }
 pack() {
 	echo Pack rootfs
@@ -65,7 +69,7 @@ add_file() {
 	if [ "$foo" = "./etc/init.d" ]; then
 	    echo Enabling "$file"
 	    set +e
-	    env IPKG_INSTROOT=$instroot sh $instroot/etc/rc.common "$dst" enable
+	    env IPKG_INSTROOT="$instroot" sh "$instroot"/etc/rc.common "$dst" enable
 	    set -e
 	fi
     fi
@@ -81,7 +85,7 @@ disable_services() {
     local services="$1"
     for service in $services; do
         echo Disabling "$service"
-        env IPKG_INSTROOT=$instroot sh $instroot/etc/rc.common $instroot/etc/init.d/"$service" disable
+        env IPKG_INSTROOT="$instroot" sh "$instroot"/etc/rc.common "$instroot"/etc/init.d/"$service" disable
     done
 }
 clean_up() {
@@ -90,13 +94,13 @@ clean_up() {
 unpack
 disable_root
 if test -n "$metadata"; then
-	add_file "$metadata" "$metadata_dir" $dir
+	add_file "$metadata" "$metadata_dir" "$dir"
 fi
-add_files templates/ $dir/templates/
+add_files templates/ "$dir"/templates/
 disable_services "$services"
-add_files $files_dir $instroot
+add_files $files_dir "$instroot"
 if test -n "$files"; then
-	add_files "$files" $instroot
+	add_files "$files" "$instroot"
 fi
 pack
 clean_up

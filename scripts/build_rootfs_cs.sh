@@ -47,9 +47,9 @@ unpack() {
 pack() {
 	echo Pack rootfs
 	if test -n "$metadata"; then
-		(cd "$dir" && tar -cz --numeric-owner --owner=0 --group=0 --sort=name -- *  ) > "$dst_file"
+		(cd "$dir" && tar -cz --sort=name -- *  ) > "$dst_file"
 	else
-		(cd "$dir"/rootfs && tar -cz --numeric-owner --owner=0 --group=0 --sort=name -- * ) > "$dst_file"
+		(cd "$dir"/rootfs && tar -cz --sort=name -- * ) > "$dst_file"
 	fi
 }
 disable_root() {

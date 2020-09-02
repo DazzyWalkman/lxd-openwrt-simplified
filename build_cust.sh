@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 export LC_ALL=C
+super=fakeroot
 ver=$(basename "$1"|cut -d'-' -f 2)
 dist=$(basename "$1"|cut -d'-' -f 1)
 type=$2
@@ -28,7 +29,21 @@ build_tarball() {
 	fi
 	local cmd=""
 	cmd="scripts/build_rootfs_cs.sh"
-	"$cmd" "$rootfs" $opts -o "$tarball" --disable-services="sysfixtime sysntpd led"
+	if [ "$(id -u)" != 0 ]; then
+		case "$super" in
+			sudo)
+				cmd="sudo $cmd"
+				;;
+			fakeroot)
+				cmd="fakeroot $cmd"
+				;;
+			*)
+				echo "You have to sudo or use fakeroot."
+				exit 1
+				;;
+		esac
+	fi	
+	$cmd "$rootfs" $opts -o "$tarball" --disable-services="sysfixtime sysntpd led"
 }
 build_metadata() {
 	local desc=""

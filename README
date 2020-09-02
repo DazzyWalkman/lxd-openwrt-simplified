@@ -19,6 +19,7 @@ Requirements
 ------------
 
 It's recommended you use Debian or Ubuntu on the build system. 
+* fakeroot is needed. Or user can config the script to use sudo.
 
 Configuration
 -------------

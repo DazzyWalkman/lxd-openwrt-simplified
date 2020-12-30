@@ -34,7 +34,7 @@ if [ $# -ne 1 ]; then
 fi
 src_tar=$1
 dir=$(mktemp -d)
-if [ $? -eq 1 ]; then 
+if [ ! -d "$dir" ]; then 
 	echo "Failed to make temp dir. Abort."
 	exit 1
 fi

@@ -47,10 +47,11 @@ unpack() {
 pack() {
 	echo Pack rootfs
 	if test -n "$metadata"; then
-		(cd "$dir" && tar -cz --sort=name -- *  ) > "$dst_file"
+	local TARGET_DIR="$dir"
 	else
-		(cd "$dir"/rootfs && tar -cz --sort=name -- * ) > "$dst_file"
+	local TARGET_DIR="$dir"/rootfs
 	fi
+	tar -cp --sort=name -C "$TARGET_DIR" . | gzip -9n > "$dst_file"
 }
 disable_root() {
 	sed -i -e 's/^root::/root:*:/' "$instroot"/etc/shadow

@@ -43,7 +43,7 @@ build_tarball() {
 				;;
 		esac
 	fi	
-	$cmd "$rootfs" $opts -o "$tarball" --disable-services="sysfixtime sysntpd led"
+	$cmd "$rootfs" $opts -o "$tarball" --disable-services="sysfixtime sysntpd led urngd"
 }
 build_metadata() {
 	local desc=""

@@ -27,6 +27,7 @@ Configuration
 -------------
 
 Refer to the top of build_cust.sh.
+And users may have to monitor the entropy available, as this script will disable the urngd service of the OpenWRT in favor of EGD on host, with the assumption that the OpenWRT instance shares entropy with the host.
 
 Usage
 -----

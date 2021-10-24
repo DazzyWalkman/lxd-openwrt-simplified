@@ -85,8 +85,12 @@ add_files() {
 disable_services() {
     local services="$1"
     for service in $services; do
+	local init_script="$instroot"/etc/init.d/"$service"
+	if [ -x "$init_script" ]; then 
         echo Disabling "$service"
-        env IPKG_INSTROOT="$instroot" sh "$instroot"/etc/rc.common "$instroot"/etc/init.d/"$service" disable
+        env IPKG_INSTROOT="$instroot" sh "$instroot"/etc/rc.common "$init_script" disable
+		else echo "$service" not found. Skip.
+		fi
     done
 }
 clean_up() {

@@ -17,7 +17,7 @@ revision=$(basename "$1" | cut -d'-' -f 3-4)
 rootfs="$1"
 arch_lxd="$(tar xf "$rootfs" ./etc/openwrt_release -O | grep DISTRIB_ARCH | sed -e "s/.*='\(.*\)'/\1/")"
 if [ ! "$arch_lxd" ]; then
-	echo "Unknown CPU arch. Possible an invalid OpenWRT rootfs tarball. Failed."
+	echo "Unknown CPU arch. Possible an invalid OpenWrt rootfs tarball. Failed."
 	exit 1
 fi
 tarball=bin/${dist}-${ver}-${revision}-${arch_lxd}-${type}.tar.gz

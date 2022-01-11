@@ -8,6 +8,9 @@ log_output() {
 }
 
 boot() {
+	# Note:
+	# This block of code for loading ip and ip6 tables is redundant after commit 3624c3786601699b6e7f9d18209fad0d7c6fe4e9: firewall3: support table load on access on Linux 5.15+
+	# However, it's too harmless to justify a case switch. It will be removed when all older releases are EOL. 
 	# Only execute for lxc containers
 	if [ "$container" != "lxc" ]; then
 		exit 0

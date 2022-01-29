@@ -1,5 +1,3 @@
-Please note: As of 2021.03.22, this script may NOT work with the newly-introduced, nftables-based implementation of the UCI firewall, firewall4.   
-
 lxd-openwrt-simplified
 ===========
 

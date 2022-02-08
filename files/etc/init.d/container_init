@@ -10,46 +10,48 @@ log_output() {
 boot() {
 	# Note:
 	# This block of code for loading ip and ip6 tables is redundant after commit 3624c3786601699b6e7f9d18209fad0d7c6fe4e9: firewall3: support table load on access on Linux 5.15+
-	# However, it's too harmless to justify a case switch. It will be removed when all older releases are EOL. 
+	# However, it's too harmless to justify a case switch. It will be removed when all older releases are EOL.
 	# Only execute for lxc containers
 	if [ "$container" != "lxc" ]; then
 		exit 0
 	fi
+	# Only execute for firewall3 builds
+	if [ -n "$(opkg files firewall 2>/dev/null | grep firewall.user)" ]; then
+		local disable_ipv6="$(uci_get firewall @defaults[0] disable_ipv6 false)"
+		case "$disable_ipv6" in
+			'0' | 'no' | 'off' | 'false' | 'disabled') disable_ipv6=false ;;
+			'1' | 'yes' | 'on' | 'true' | 'enabled') disable_ipv6=true ;;
+		esac
 
-	local disable_ipv6="$(uci_get firewall @defaults[0] disable_ipv6 false)"
-	case "$disable_ipv6" in
-		'0'|'no'|'off'|'false'|'disabled') disable_ipv6=false ;;
-		'1'|'yes'|'on'|'true'|'enabled') disable_ipv6=true ;;
-	esac
-
-	tables='filter nat mangle raw'
-	res=0
-	for table in $tables; do
-		iptables -n -t $table -L >/dev/null 2>/dev/null 
-		if ! grep $table /proc/net/ip_tables_names >/dev/null; then
-			log_output -p daemon.crit "ip $table load failed"
-			res=1
-		fi
-
-		if [ "$disable_ipv6" = "false" ]; then
-			ip6tables -n -t $table -L >/dev/null 2>/dev/null
-			if ! grep $table /proc/net/ip6_tables_names >/dev/null; then
-				log_output -p daemon.crit "ip6 $table load failed"
+		tables='filter nat mangle raw'
+		res=0
+		for table in $tables; do
+			iptables -n -t $table -L >/dev/null 2>/dev/null
+			if ! grep $table /proc/net/ip_tables_names >/dev/null; then
+				log_output -p daemon.crit "ip $table load failed"
 				res=1
 			fi
-		fi
-	done
-	if [ "$res" == "0" ]; then
-		if [ "$disable_ipv6" = "false" ]; then
-			log_output -p daemon.info "ip and ip6 tables loaded successfully"
-		else
-			log_output -p daemon.info "ip tables loaded successfully"
+
+			if [ "$disable_ipv6" = "false" ]; then
+				ip6tables -n -t $table -L >/dev/null 2>/dev/null
+				if ! grep $table /proc/net/ip6_tables_names >/dev/null; then
+					log_output -p daemon.crit "ip6 $table load failed"
+					res=1
+				fi
+			fi
+		done
+		if [ "$res" == "0" ]; then
+			if [ "$disable_ipv6" = "false" ]; then
+				log_output -p daemon.info "ip and ip6 tables loaded successfully"
+			else
+				log_output -p daemon.info "ip tables loaded successfully"
+			fi
 		fi
 	fi
-
-	if [ ! -e /lib/modules/$(uname -r) ]; then
-		local modulesdir=$(basename $(dirname $(opkg files kmod-ipt-core|grep "/lib/modules/[0-9].*"|head -1)))
-		ln -s $modulesdir /lib/modules/$(uname -r)
+	local has_kmod=$(opkg list-installed | grep kmod | head -1 | cut -d" " -f1)
+	if [ ! -e /lib/modules/$(uname -r) ] && [ -n "$has_kmod" ]; then
+		local modulesdir=$(basename $(dirname $(opkg files "$has_kmod" | grep "/lib/modules/[0-9].*" | head -1)))
+		ln -s "$modulesdir" /lib/modules/"$(uname -r)"
 	fi
 	exit $res
 }

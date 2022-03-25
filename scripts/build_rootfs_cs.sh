@@ -63,8 +63,11 @@ pack() {
 	fi
 	tar -cp --sort=name -C "$TARGET_DIR" . | gzip -9n >"$dst_file"
 }
-disable_root() {
+disable_root_and_jail() {
 	sed -i -e 's/^root::/root:*:/' "$instroot"/etc/shadow
+	#FIXME
+	#Disable process isolation for dnsmasq
+	sed -i -e '/procd_add_jail/s/^/#/' "$instroot"/etc/init.d/dnsmasq
 }
 add_file() {
 	file=$1
@@ -110,7 +113,7 @@ clean_up() {
 	rm -rf "$dir"
 }
 unpack
-disable_root
+disable_root_and_jail
 if [ -n "$metadata" ]; then
 	add_file "$metadata" "$metadata_dir" "$dir"
 fi

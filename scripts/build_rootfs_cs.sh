@@ -67,7 +67,9 @@ disable_root_and_jail() {
 	sed -i -e 's/^root::/root:*:/' "$instroot"/etc/shadow
 	#FIXME
 	#Disable process isolation for dnsmasq
-	sed -i -e '/procd_add_jail/s/^/#/' "$instroot"/etc/init.d/dnsmasq
+	if [ -x "$instroot"/etc/init.d/dnsmasq ]; then
+		sed -i -e '/procd_add_jail/s/^/#/' "$instroot"/etc/init.d/dnsmasq
+	fi
 }
 add_file() {
 	file=$1

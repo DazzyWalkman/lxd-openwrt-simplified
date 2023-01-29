@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 export LC_ALL=C
 super=fakeroot
@@ -38,6 +38,7 @@ else
 	exit 1
 fi
 tarball=bin/${dist}-${ver}-${revision}-${arch_lxd}-${type}.tar.gz
+tarball=$(sed 's/[_ ]/-/g' <<<${tarball,,})
 metadata=bin/metadata.yaml
 build_tarball() {
 	local opts=""

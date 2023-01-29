@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 usage() {
 	echo "Usage: $0  [-d|--disable-services <services>] [-o|--output <dst file>][-f|--files <files>] [-m|--metadata <metadata.yaml>]  <src tar>"

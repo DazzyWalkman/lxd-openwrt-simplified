@@ -5,7 +5,7 @@ Scripts for building LXD/LXC images from OpenWrt rootfs tarballs.
 
 This is a simplified version of https://github.com/mikma/lxd-openwrt.
 
-This version assumes the user has already got an OpenWrt 21.02 or later rootfs tarball containing ALL essential packages, e.g. by buildroot or by image builder.
+This version assumes the user has already got an OpenWrt 22.03 or later rootfs tarball containing ALL essential packages, e.g. by buildroot or by image builder.
 
 What it will do:
 

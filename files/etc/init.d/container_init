@@ -8,7 +8,7 @@ boot() {
 	if [ "$container" != "lxc" ]; then
 		exit 0
 	fi
-	local has_kmod="$(grep "/lib/modules/[0-9].*" /usr/lib/opkg/info/kernel.list 2>/dev/null | head -1)"
+	local has_kmod="$(grep "/lib/modules/[0-9].*" /usr/lib/opkg/info/kernel.list /lib/apk/packages/kernel.list 2>/dev/null | head -1)"
 	if [ ! -e /lib/modules/"$(uname -r)" ] && [ -n "$has_kmod" ]; then
 		local modulesdir="$(basename "$(dirname "$has_kmod")")"
 		ln -s "$modulesdir" /lib/modules/"$(uname -r)"
